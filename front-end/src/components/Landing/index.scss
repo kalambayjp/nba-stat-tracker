@@ -1,0 +1,26 @@
+.landing-page-content {
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+
+  .landing-prompt {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 40%;
+
+    margin-left: 2em;
+  }
+
+  .landing-animation {
+    width: 60%;
+    margin: 3em;
+
+    img {
+      max-width: 100%;
+      border-radius: 30px;
+    }
+  }
+}
