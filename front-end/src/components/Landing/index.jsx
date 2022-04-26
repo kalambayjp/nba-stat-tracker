@@ -4,7 +4,7 @@ import "./index.scss";
 
 const Landing = () => {
   return (
-    <div className="landing-page-content">
+    <div className="page-content">
       <div className="landing-prompt">
         <h3>Login / Register</h3>
         <span>To get the latest stats on your favourite teams and players</span>

@@ -5,7 +5,9 @@ nav {
   width: 100%;
   background-color: #165815;
   padding: 10px;
-
+  z-index: 3;
+  position: absolute;
+  
   .logo {
     margin-left: 0.5em;
     font-size: 3.5em;

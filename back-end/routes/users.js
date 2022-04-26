@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const { PrismaClient } = require("@prisma/client");
 const { user } = new PrismaClient();
+require("dotenv").config();
+const bcrypt = require("bcryptjs");
+const saltRounds = process.env.SALT;
 
 // REGISTER NEW USER
 
@@ -17,7 +20,7 @@ router.post("/", async (req, res) => {
       },
     });
 
-    res.json(userData);
+    return "successfully registerd";
   } catch (err) {
     res.render(err);
   }
@@ -26,7 +29,7 @@ router.post("/", async (req, res) => {
 // USER SIGN IN
 
 router.get("/", async (req, res) => {
-  const { username, password } = req.query;
+  const { username, pwd } = req.query;
 
   try {
     const userData = await user.findUnique({
@@ -35,14 +38,20 @@ router.get("/", async (req, res) => {
         username: username,
       },
     });
+    console.log(bcrypt.compareSync(pwd, userData.password));
 
-    if (userData.password === password) {
-      res.json(userData);
+    if (bcrypt.compareSync(pwd, userData.password)) {
+      const frontEndUsrData = {
+        firstName: userData.first_name,
+        lastName: userData.last_name,
+        username: userData.username,
+      };
+      return res.send(frontEndUsrData);
     }
 
-    res.send("Incorrect password, please try again. ");
+    res.send("Incorrect password");
   } catch (err) {
-    res.send(err);
+    res.send("No user found");
   }
 });
 

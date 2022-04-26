@@ -1,26 +1,19 @@
-.landing-page-content {
+.landing-prompt {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 40%;
 
-  height: 100%;
+  margin-left: 2em;
+}
 
-  .landing-prompt {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    width: 40%;
+.landing-animation {
+  width: 60%;
+  margin: 3em;
 
-    margin-left: 2em;
-  }
-
-  .landing-animation {
-    width: 60%;
-    margin: 3em;
-
-    img {
-      max-width: 100%;
-      border-radius: 30px;
-    }
+  img {
+    max-width: 100%;
+    border-radius: 30px;
   }
 }
