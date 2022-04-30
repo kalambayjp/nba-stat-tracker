@@ -5,10 +5,13 @@ import reportWebVitals from "./reportWebVitals";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import userReducer from "./features/user.js";
+import selectedTeamsReducer from "./features/team";
+// import { AppLoading } from "expo";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
+    selectedTeams: selectedTeamsReducer,
   },
 });
 

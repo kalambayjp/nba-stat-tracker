@@ -17,11 +17,10 @@ const Login = () => {
     axios
       .get(`http://localhost:8080/api/users?username=${username}&pwd=${pwd}`)
       .then((res) => {
-        console.log("worked");
         const userObj = { ...res.data, authenticated: true };
         dispatch(setCurrentUser({ ...userObj }));
+        localStorage.setItem("userCreds", JSON.stringify(userObj));
         navigate("/profile");
-        console.log(res);
       })
       .catch((err) => console.log(err));
   };

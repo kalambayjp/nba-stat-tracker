@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import user, { setCurrentUser } from "../../features/user";
 import { useState } from "react";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
@@ -23,13 +24,15 @@ const Register = () => {
         `http://localhost:8080/api/users?firstName=${firstName}&lastName=${lastName}&username=${username}&password=${hashedPwd}`
       )
       .then(() => {
-        const userdata = {
+        const userCreds = {
           firstName,
           lastName,
           username,
           authenticated: true,
         };
-        dispatch(setCurrentUser({ userdata }));
+        dispatch(setCurrentUser({ ...userCreds }));
+        localStorage.setItem("userCreds", JSON.stringify(userCreds));
+        Navigate("/profile");
       })
       .catch((err) => console.log(err));
   };

@@ -1,0 +1,12 @@
+.team-card {
+  display: flex;
+  margin: 5px;
+
+  .team-logo {
+    width: 6em;
+    height: 6em
+  }
+  .team-name {
+    margin-left: 2em;
+  }
+}
