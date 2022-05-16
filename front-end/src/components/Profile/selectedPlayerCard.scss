@@ -1,0 +1,15 @@
+.player-card {
+  margin: 1em;
+  letter-spacing: 1px;
+  .stats-table {
+    border-style: solid;
+    border-radius: 5px;
+    border-color: rgb(252, 125, 125);
+    padding: 5px
+  }
+  .form-section {
+    display: flex;
+    justify-content: center;
+    
+  }
+}

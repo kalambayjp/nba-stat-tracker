@@ -1,5 +1,4 @@
 import axios from "axios";
-import team from "../features/team";
 
 export const getAllTeams = async () => {
   try {
@@ -10,7 +9,7 @@ export const getAllTeams = async () => {
   }
 };
 
-export const getUsersSelectedTeamIds = async (userId) => {
+export const getSelectedTeamIds = async (userId) => {
   try {
     const teamIds = await axios.get(
       `http://localhost:8080/api/teams/selected?userId=${userId}`
@@ -21,7 +20,7 @@ export const getUsersSelectedTeamIds = async (userId) => {
   }
 };
 
-export const getUsersSelectedTeamData = async (teamId) => {
+export const getSelectedTeamData = async (teamId) => {
   try {
     const team = await axios.get(
       `http://localhost:8080/api/teams/team-data?teamId=${teamId}`
@@ -33,14 +32,49 @@ export const getUsersSelectedTeamData = async (teamId) => {
 };
 
 export const getUsersSelectedTeams = async (userId) => {
-  const selectedTeamIds = await getUsersSelectedTeamIds(userId);
+  const selectedTeamIds = await getSelectedTeamIds(userId);
   const teamDataPromises = selectedTeamIds.map((id) =>
-    getUsersSelectedTeamData(id.team_identifier)
+    getSelectedTeamData(id.team_identifier)
   );
 
   return Promise.all(teamDataPromises)
     .then((data) => {
       return data;
+    })
+    .catch((err) => {
+      return err;
+    });
+};
+
+export const getTeamStats = async (teamId) => {
+  const url = "http://localhost:8080/api/teams/team-stats?teamId=";
+
+  try {
+    const stats = await axios.get(url + teamId);
+    return stats.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const addToSelectedTeams = async (userId, teamId) => {
+  const url = "http://localhost:8080/api/teams";
+  axios
+    .post(url + `?userId=${userId}&teamId=${teamId}`)
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      return err;
+    });
+};
+
+export const deleteFromSelectedTeams = async (dbTeamId) => {
+  const url = "http://localhost:8080/api/teams";
+  axios
+    .delete(url + `?id=${dbTeamId}`)
+    .then((res) => {
+      return res;
     })
     .catch((err) => {
       return err;

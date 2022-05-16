@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const { PrismaClient } = require("@prisma/client");
-const { selected_team } = new PrismaClient();
+const { selected_player } = new PrismaClient();
 const axios = require("axios");
 require("dotenv").config();
 
@@ -34,18 +34,6 @@ router.get("/name", async (req, res) => {
   const { lastName } = req.query;
 
   let apiUrl = `https://api-nba-v1.p.rapidapi.com/players?search=${lastName}`;
-  // if (firstName) {
-  //   // both cases
-  //   if (lastName) {
-  //     apiUrl = `https://api-nba-v1.p.rapidapi.com/players?firstname=${firstName}&lastname=${lastName}`;
-  //   }
-  //   // only first name
-  //   apiUrl = `https://api-nba-v1.p.rapidapi.com/players?firstname=${firstName}`;
-
-  //   // only last name
-  // } else if (lastName) {
-  //   apiUrl = `https://api-nba-v1.p.rapidapi.com/players?lastname=${lastName}`;
-  // }
 
   const config = {
     headers: {
@@ -62,6 +50,88 @@ router.get("/name", async (req, res) => {
       return res.json(players);
     })
     .catch((err) => res.send(err));
+});
+
+// GET USERS SELECTED PLAYERS FROM DB
+
+router.get("/selected", async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    const playerData = await selected_player.findMany({
+      where: {
+        user_id: parseInt(userId),
+      },
+      select: {
+        player_identifier: true,
+        id: true,
+      },
+    });
+
+    res.send(playerData);
+  } catch (err) {
+    res.send(err);
+  }
+});
+
+// ADD SELECTED PLAYER TO DB
+
+router.post("/selected", async (req, res) => {
+  const { userId, playerId } = req.query;
+
+  try {
+    const playerData = await selected_player.create({
+      data: {
+        user_id: parseInt(userId),
+        player_identifier: parseInt(playerId),
+      },
+    });
+
+    res.send(playerData);
+  } catch (err) {
+    res.send(err);
+  }
+});
+
+// GET PLAYER STATS
+
+router.get("/stats", async (req, res) => {
+  const { playerId } = req.query;
+
+  let apiUrl = `https://api-nba-v1.p.rapidapi.com/players/statistics`;
+
+  const config = {
+    params: { id: playerId, season: "2021" },
+    headers: {
+      "X-RapidAPI-Host": "api-nba-v1.p.rapidapi.com",
+      "X-RapidAPI-Key": process.env.SECRET_KEY,
+    },
+  };
+
+  axios
+    .get(apiUrl, config)
+    .then((response) => {
+      const playerStats = response.data.response;
+      return res.json(playerStats);
+    })
+    .catch((err) => res.send(err));
+});
+
+// DELETE SELECTED PLAYER FROM DB
+
+router.delete("/selected/delete", async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const deletedPlayer = await selected_player.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+    res.send(deletedPlayer);
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 module.exports = router;

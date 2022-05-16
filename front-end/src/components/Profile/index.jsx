@@ -1,12 +1,17 @@
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../../features/user";
 import { getUsersSelectedTeams } from "../../datafetching/teams";
 import axios from "axios";
 // import { searchForPlayers } from "../../datafetching/players";
-import Team from "../TeamSearch/indivTeam";
+import Team from "./indivTeam";
+import { SelectedPlayerCard } from "./SelectedPlayerCard";
+import {
+  formatplayerStats,
+  getUsersSelectedPlayerData,
+} from "../../datafetching/players";
 
 const Profile = () => {
   // const [userCreds, setUserCreds] = useState({});
@@ -14,7 +19,6 @@ const Profile = () => {
 
   const [displayedTeams, setDisplayedTeams] = useState([]);
   const [displayedPlayers, setDisplayedPlayers] = useState([]);
-  const [playerSearch, setPlayerSearch] = useState("");
   const dispatch = useDispatch();
 
   // check for user credentials before rendering page
@@ -29,8 +33,12 @@ const Profile = () => {
     // run requests for team data on renders
     async function fetchData() {
       const selectedTeams = await getUsersSelectedTeams(userCreds.userId);
+      const selectedPlayers = await getUsersSelectedPlayerData(
+        userCreds.userId
+      );
 
       setDisplayedTeams(selectedTeams);
+      setDisplayedPlayers(selectedPlayers);
     }
     fetchData();
   }, []);
@@ -45,41 +53,32 @@ const Profile = () => {
     return <Team key={i} team={team} />;
   });
 
-  const searchForPlayers = async (e) => {
-    try {
-      e.preventDefault();
-      const url = "http://localhost:8080/api/players/name?lastName=";
-      axios
-        .get(url + playerSearch)
-        .then((res) => setDisplayedPlayers(res.data));
-    } catch (err) {
-      console.log(err);
+  // build displayed players element
+  const formattedDislayedPlayersData = displayedPlayers.map((player) => {
+    return formatplayerStats(player);
+  });
+  const displayedPlayersElement = formattedDislayedPlayersData.map(
+    (player, i) => {
+      return <SelectedPlayerCard key={i} playerStats={player} />;
     }
-  };
-
-  console.log(displayedPlayers);
+  );
 
   return (
     <div className="profile-page">
       <div className="selected-teams">
         <h1>Selected teams</h1>
         {displayedTeams.length > 0 && diplayedTeamsElement}
+        <Link to="/team-search">
+          <button>add team(s)</button>
+        </Link>
       </div>
+
       <div className="selected-players">
         <h1>Selected players</h1>
-        <form onSubmit={searchForPlayers}>
-          <label for="search">Add players to your list</label>
-          <input
-            type="text"
-            name="search"
-            value={playerSearch}
-            onChange={(e) => setPlayerSearch(e.target.value)}
-            placeholder="Search by last name"
-          />
-          <button type="submit" value="submit">
-            Search
-          </button>
-        </form>
+        {displayedPlayers.length > 0 && displayedPlayersElement}
+        <Link to="/player-search">
+          <button>add player(s)</button>
+        </Link>
       </div>
     </div>
   );

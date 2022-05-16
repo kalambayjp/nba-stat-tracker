@@ -1,0 +1,13 @@
+.single-team {
+  .team-logo {
+    width: 4em;
+    height: 4em;
+  }
+}
+
+.team-list {
+  height: 75%;
+  width: 60%;
+
+  overflow-y: scroll;
+}

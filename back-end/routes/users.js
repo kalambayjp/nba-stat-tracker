@@ -45,6 +45,7 @@ router.get("/", async (req, res) => {
         firstName: userData.first_name,
         lastName: userData.last_name,
         username: userData.username,
+        userId: userData.id,
       };
       return res.send(frontEndUsrData);
     }

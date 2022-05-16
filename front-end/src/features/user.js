@@ -7,6 +7,7 @@ export const userSlice = createSlice({
       firstName: "",
       lastName: "",
       username: "",
+      id: null,
       authenticated: false,
     },
   },
