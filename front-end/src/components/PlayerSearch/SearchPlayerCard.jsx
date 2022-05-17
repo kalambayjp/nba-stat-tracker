@@ -1,16 +1,18 @@
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const SearchPlayerCard = (props) => {
+  const navigate = useNavigate();
   const { player } = props;
   const userId = JSON.parse(localStorage.getItem("userCreds")).userId;
 
   const addToSelectedPlayers = () => {
     const url = `http://localhost:8080/api/players/selected?userId=${userId}&playerId=${player.id}`;
-    console.log("here");
+
     axios
       .post(url)
-      .then(() => console.log("works"))
+      .then(() => navigate("/profile"))
       .catch((err) => console.log(err));
   };
 

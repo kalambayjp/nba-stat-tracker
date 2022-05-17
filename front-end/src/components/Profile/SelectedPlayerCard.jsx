@@ -2,11 +2,12 @@ import axios from "axios";
 import { useState } from "react";
 import { formatplayerTrendStats } from "../../datafetching/players";
 import { getSelectedPlayerIds } from "../../datafetching/players";
+import { useNavigate } from "react-router-dom";
 import "./selectedPlayerCard.scss";
 
 export const SelectedPlayerCard = (props) => {
   const { playerStats } = props;
-  // console.log(playerStats);
+  const navigate = useNavigate();
   const [userInputValue, setUserInputValue] = useState(0);
   const [showTrendStats, setShowTrendStats] = useState(false);
   const [formattedTrendStats, setFormattedTrendStats] = useState([]);
@@ -34,7 +35,7 @@ export const SelectedPlayerCard = (props) => {
     const url = "http://localhost:8080/api/players/selected/delete?";
     axios
       .delete(url + `id=${selectedPlayer["0"].id}`)
-      .then((res) => console.log(res))
+      .then(() => navigate("/profile"))
       .catch((err) => console.log(err));
   };
 
